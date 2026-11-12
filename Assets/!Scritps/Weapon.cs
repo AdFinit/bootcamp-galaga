@@ -1,5 +1,8 @@
+
 // Gives access to Unity types like Vector2 and Vector3
 using UnityEngine;
+
+
 
 // A plain C# class: spawns bullets for the ship that owns it
 // Not a MonoBehaviour, so it is created with new inside Ship

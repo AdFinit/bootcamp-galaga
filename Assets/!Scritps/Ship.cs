@@ -3,7 +3,7 @@ using UnityEngine;
 
 // The parent class of every ship in the game
 // abstract: Ship is never used on its own, only through Player and Enemy
-public abstract class Ship : MonoBehaviour
+public abstract class Ship : MonoBehaviour, IDamageable
 {
     // How fast the ship moves, editable in the Inspector
     [SerializeField] private float moveSpeed = 5f;
@@ -31,9 +31,14 @@ public abstract class Ship : MonoBehaviour
     // Moves the ship this frame in the direction passed in
     public void Move(Vector2 direction)
     {
-        // Distance = direction x speed x time since the last frame
-        transform.Translate(direction * moveSpeed * Time.deltaTime);
+        Move(direction, 1f);
     }
+
+    public void Move(Vector2 direction, float speedMult)
+    {
+        transform.Translate(direction * moveSpeed *  speedMult * Time.deltaTime);
+    }
+
 
     // abstract: no body here; Player and Enemy must each write their own Shoot
     public abstract void Shoot();

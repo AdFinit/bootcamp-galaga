@@ -43,8 +43,7 @@ public class Bullet : MonoBehaviour
     // Runs when this bullet's trigger collider overlaps another collider
     private void OnTriggerEnter2D(Collider2D other)
     {
-        // Look for a Ship on whatever was hit (Player, Bee and Butterfly are all Ships)
-        Ship target = other.GetComponent<Ship>();
+        IDamageable target = other.GetComponent<IDamageable>();
 
         // Not a ship (like another bullet): ignore it
         if (target == null)
@@ -63,7 +62,7 @@ public class Bullet : MonoBehaviour
     }
 
     // Damages the ship this bullet hit
-    public void OccurDamage(Ship target)
+    public void OccurDamage(IDamageable target)
     {
         // Any Ship can be hit: the player or any enemy
         target.TakeDamage(damage);

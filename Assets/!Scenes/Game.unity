@@ -759,6 +759,7 @@ MonoBehaviour:
   damage: 20
   bulletPrefab: {fileID: 8666951978578763571, guid: 018ab7af4af8b324db27840c3bd769ac, type: 3}
   points: 100
+  diveSpeedMult: 1.5
 --- !u!212 &1297189363
 SpriteRenderer:
   serializedVersion: 3

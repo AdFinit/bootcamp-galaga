@@ -40,7 +40,7 @@ public abstract class Enemy : Ship
         Move(Vector2.down);
     }
 
-
+    
     public override void Shoot()
     {
 
