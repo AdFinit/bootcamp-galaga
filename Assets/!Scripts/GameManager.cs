@@ -1,7 +1,12 @@
 // Gives access to List
+using System;
 using System.Collections.Generic;
+using System.Collections;
+using Unity.Tutorials.Editor;
+
 // Gives access to Unity's types like MonoBehaviour
 using UnityEngine;
+using Unity.VisualScripting;
 
 // ": MonoBehaviour" makes this a Unity component that can sit on a GameObject
 public class GameManager : MonoBehaviour
@@ -13,9 +18,13 @@ public class GameManager : MonoBehaviour
     // The player's ship in the scene
     [SerializeField] private Player player;
     // Every enemy still alive; a List so destroyed enemies can be removed
-    [SerializeField] private List<Enemy> enemies;
+    private List<Enemy> enemies = new List<Enemy>();
     // Seconds between enemy dives
     [SerializeField] private float diveInterval = 3f;
+    [SerializeField] private Enemy[] enemyPrefabs;
+    [SerializeField] private Transform[] spawnPoints;
+    [SerializeField] private float spawnDelay = 0.2f;
+    private int wave = 0;
 
     // Runs before any Start, so Instance is ready for every other script
     private void Awake()
@@ -29,8 +38,33 @@ public class GameManager : MonoBehaviour
     {
         // Every game starts with a score of 0
         Score.ResetPoints();
-        // Send a random enemy diving every diveInterval seconds, starting after one interval
-        InvokeRepeating(nameof(SendRandomDiver), diveInterval, diveInterval);
+        StartCoroutine(WaveLoop());
+    }
+
+    private IEnumerator WaveLoop()
+    {
+        while (true)
+        {
+            wave++;
+            Debug.Log("Wave " + wave);
+            yield return StartCoroutine(SpawnWave());
+            yield return new WaitForSeconds(diveInterval);
+
+            while(enemies.Count > 0)
+            {
+                SendRandomDiver();
+                yield return new WaitForSeconds(diveInterval);
+            }
+        }
+    }
+
+    private IEnumerator SpawnWave()
+    {
+        foreach (Transform spawn in spawnPoints)
+        {
+            SpawnEnemy(spawn);
+            yield return new WaitForSeconds(spawnDelay);
+        }
     }
 
     // Picks one living enemy and starts its dive
@@ -43,7 +77,7 @@ public class GameManager : MonoBehaviour
         }
 
         // A random position in the list, from 0 up to Count - 1
-        int index = Random.Range(0, enemies.Count);
+        int index = UnityEngine.Random.Range(0, enemies.Count);
         // That enemy starts diving
         enemies[index].StartDive();
     }
@@ -54,4 +88,17 @@ public class GameManager : MonoBehaviour
         // Take it out of the list
         enemies.Remove(enemy);
     }
+
+    private void SpawnEnemy(Transform spawnPoint)
+    {
+        Enemy prefab = enemyPrefabs[UnityEngine.Random.Range(0, enemyPrefabs.Length)];
+        Enemy newEnemy = Instantiate(prefab, spawnPoint.position, Quaternion.identity);
+        enemies.Add(newEnemy);
+    }
+
+    public Player GetPlayer()
+    {
+        return player;
+    }
+    
 }
