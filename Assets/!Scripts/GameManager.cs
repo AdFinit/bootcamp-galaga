@@ -91,9 +91,17 @@ public class GameManager : MonoBehaviour
 
     private void SpawnEnemy(Transform spawnPoint)
     {
-        Enemy prefab = enemyPrefabs[UnityEngine.Random.Range(0, enemyPrefabs.Length)];
-        Enemy newEnemy = Instantiate(prefab, spawnPoint.position, Quaternion.identity);
-        enemies.Add(newEnemy);
+        try
+        {
+            Enemy prefab = enemyPrefabs[UnityEngine.Random.Range(0, enemyPrefabs.Length)];
+            Enemy newEnemy = Instantiate(prefab, spawnPoint.position, Quaternion.identity);
+            enemies.Add(newEnemy);
+        }
+        catch (Exception e)
+        {
+            Debug.LogError("Couldn't spawn enemy: " + e);
+        }
+        
     }
 
     public Player GetPlayer()

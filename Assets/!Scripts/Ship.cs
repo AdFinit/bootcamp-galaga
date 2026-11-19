@@ -64,4 +64,9 @@ public abstract class Ship : MonoBehaviour, IDamageable
         // Destroy the GameObject this script is on
         Destroy(gameObject);
     }
+
+    public Health GetHealth()
+    {
+        return health;
+    }
 }
